@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage{cite} % Make references as [1-4], not [1,2,3,4]
+%\usepackage{url}  % Formatting web addresses
+\usepackage{ifthen}  % Conditional
+\usepackage{multicol}   %Columns
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage[subfigure]{tocloft}
+\usepackage{amssymb}
+\usepackage{caption}
+\usepackage{color}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{booktabs}
+\usepackage{lscape}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{epstopdf}
+\setcounter{tocdepth}{3}
+
+
+%\usepackage{endfloat}
+%\thispagestyle{empty}
+\begin{document}
+  \author{Eric Zhang Lu}
+  \title{Identify IBD regions with rare variants}
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+  \maketitle
+\section{Implementation}
+The genome is divided into windows ($w$, may be overlapped each other), for the genotypes ($G_1$,$G_2$) of rare variants(minor allele frequency$<0.1\%$) in $w$, we have
+\begin{equation}
+\begin{split}
+P(G_1,G_2|IBD,D)&=\Sigma_{h_1,h_2,h_3}P(G_1|h_1,h_2)P(G_2|h_2,h_3)P(h_1,h_2,h_3|D)\\
+P(G_1,G_2|\overline{IBD},D)&=\Sigma_{h_1,h_2,h_3,h_4}P(G_1|h_1,h_2)P(G_2|h_3,h_4)P(h_1,h_2,h_3,h_4|D)
+\end{split}
+\end{equation}
+where $h_i \in \{0,1\}$.
+If we consider $h_i$ follows Bernoulli distribution ($B(n,\theta)$) and is independent from each other, then
+\begin{equation}
+\begin{split}
+P(h_1,h_2,h_3|D)&=\int_0^1P(h_1,h_2,h_3|\theta)P(\theta|D)d\theta\\
+&=\int_0^1P(h_1|\theta)P(h_2|\theta)P(h_3|\theta)P(\theta|D)d\theta\\
+&=\int_0^1\theta^{h_1}(1-\theta)^{1-h_1}\theta^{h_2}(1-\theta)^{1-h_2}\theta^{h_3}(1-\theta)^{1-h_3}P(\theta|D)d\theta\\
+\end{split}
+\end{equation}
+Assuming $\theta|D$ follows Beta distribution($\beta(\alpha_{update}, \beta_{update})$)
+$\alpha_{update}=\alpha_{prior}+2N_{training}+2N_{test}-t$, $\beta_{update}=\beta_{prior}+t$, where $t$ is the number of individuals hit by the variants in test set, $N_{training}$ and $N_{test}$ are the number of individuals in training and test set. $\alpha$ and $\beta$ are shortened form of $\alpha_{update}$ and $\beta_{update}$ in the following text.
+\begin{equation}
+\begin{split}
+P(\theta|D)&=\frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}
+\end{split}
+\end{equation}
+Let's say $S=h_1+h_2+h_3$, Eq. 2 can be rewritten as
+\begin{equation}
+\begin{split}
+P(h_1,h_2,h_3|D)&=\int_{0}^1 \theta^{h_1+h_2+h_3}(1-\theta)^{3-h_1-h_2-h_3}\theta^{\alpha-1}(1-\theta)^{\beta-1}\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}d\theta\\
+&=\int_0^1\theta^{S+\alpha-1}(1-\theta)^{2+\beta-S}\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}d\theta\\
+&=\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\int_0^1\theta^{S+\alpha-1}(1-\theta)^{2-S+\beta}d\theta\\
+&=\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\frac{(2-S+\beta)!}{(S+\alpha)(S+\alpha+1)...(\alpha+\beta+2)}
+\end{split}
+\end{equation}\label{eqn:binbeta}
+\section{Binomial-Beta distribution}
+According to the definition of Binomial-Beta distribution,
+\begin{equation}
+\begin{split}
+k|n,\theta \thicksim Binomial(\theta,n)\\
+\theta|\beta_1,\theta_2 \thicksim Beta(\beta_1,\beta_2)\\
+then \theta|k,n,\beta_1,\beta_2 \thicksim Beta(\beta_1+k,\beta_2+n-k)
+\end{split}
+\end{equation}
+
+We found Eq.~\ref{eqn:binbeta} actually follows Binomial-Beta distribution,
+\begin{equation}
+\begin{split}
+P(h_1,h_2,h_3|D) \thicksim Beta(\alpha+S,\beta+3-S)
+\end{split}
+\end{equation}
+\section{Beta distribution without sequencing error}
+Because $P(h_1,h_2,h_3|D)$ has included sequencing error in estimating $\theta$, we assume $k_1$ and $k_2$ hits are observed for errors from ref$->$alt and alt$->$ref,respectively:
+\begin{equation}
+\begin{split}
+&\Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha P_{\epsilon,\beta}(k_1) P_{\epsilon,\alpha}(k_2) Beta(\alpha-k_2+k_1,\beta-k_1+k_2)\\
+=&\Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha \binom \beta {k_1} \binom \alpha {k_2} \epsilon^{k_1+k_2}(1-\epsilon)^{\alpha+\beta-k_1-k_2}\frac{\theta^{\alpha+k_1-k_2-1}(1-\theta)^{\beta+k_2-k_1-1}\Gamma(\alpha+\beta)}{\Gamma(\beta+k_2-k_1)\Gamma(\alpha+k_1-k_2)}\\
+\varpropto& \Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha \epsilon^{k_1+k_2}(1-\epsilon)^{\alpha+\beta-k_1-k_2}\theta^{\alpha+k_1-k_2-1}(1-\theta)^{\beta+k_2-k_1-1}\\
+\varpropto&\Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha Beta(a,b)Beta(c,d)
+\end{split}
+\end{equation}\label{eqn:betabeta}
+The Eq.~\ref{eqn:betabeta} can be transformed to the product of independent beta variables: $\epsilon \thicksim Beta(a,b)$ and $\theta \thicksim Beta(c,d)$, where $a=k_1+k_2+1,b=\alpha+\beta-k_1-k_2+1,c=\alpha+k_1-k_2,d=\beta+k_2-k_1$
+Based on the previous study~\cite{betabeta}, we can calculate
+\begin{equation}
+\begin{split}
+M&=\frac{a}{a+b}\frac{c}{c+d}\\
+N&=\frac{a(a+1)}{(a+b)(a+b+1)}\frac{c(c+1)}{(c+d)(c+d+1)}
+\end{split}
+\end{equation}
+Assume $M$ and $N$ can be also represented by $\alpha^\ast$ and $\beta^\ast$
+\begin{equation}
+\begin{split}
+M&=\frac{\alpha^\ast}{\alpha^\ast+\beta^\ast}\\
+N&=\frac{\alpha^\ast(\alpha^\ast+1)}{(\alpha^\ast+\beta^\ast)(\alpha^\ast+\beta^\ast+1)}
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+\alpha^\ast&=\frac{(M-N)M}{M-N^2}\\
+\beta^\ast&=\frac{(M-N)(1-M)}{M-N^2}
+\end{split}
+\end{equation}
+The $\Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha P_{\epsilon,\beta}(k_1) P_{\epsilon,\alpha}(k_2) Beta(\alpha-k_2+k_1,\beta-k_1+k_2) \thicksim \Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha Beta(\alpha^\ast,\beta^\ast)$
+Then Eq.~\ref{eqn:binbeta} can be rewritten as
+\begin{equation}
+\begin{split}
+P(h_1,h_2,h_3|D)&=\int_{0}^1 \theta^{h_1+h_2+h_3}(1-\theta)^{3-h_1-h_2-h_3}\Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha Beta(\alpha^\ast,\beta^\ast)\\
+&=\Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha\int_{0}^1 \theta^{S}(1-\theta)^{3-S}Beta(\alpha^\ast,\beta^\ast)\\
+&=\Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha \int_{0}^1 Beta(\alpha^\ast+S,\beta^\ast+3-S)\\
+&=\Sigma_{k_1=0}^\beta \Sigma_{k_2=0}^\alpha \frac{\Gamma(\alpha^\ast+\beta^\ast)}{\Gamma(\alpha^\ast)\Gamma(\beta^\ast)}\frac{(2-S+\beta^\ast)!}{(S+\alpha^\ast)(S+\alpha^\ast+1)...(\alpha^\ast+\beta^\ast+2)}
+\end{split}
+\end{equation}\label{eqn:binbeta}
+
+
+
+
+
+\begin{thebibliography}{10}
+\bibitem {betabeta}
+Da-Yin Fan (1991) The distribution of the product of independent beta variables, Communications in
+Statistics - Theory and Methods, 20:12, 4043-4052, DOI: 10.1080/03610929108830755
+\end{thebibliography}
+\end{document}
+
+
