@@ -38,9 +38,7 @@ python BasicXX_step2.py -o S_24385_L1. --out_dir ../
 usage: BasicXX_step2.py [-h] [--output_file_prefix OUTPUT_FILE_PREFIX]
                         [--out_dir OUT_DIR]
 
-Run 10x Basic -- step 2: Generate Barcoded Fastqs Files --------------------
-will call run_list_generate_barcoded_fastq.sh and
-generate_barcoded_fastq_for_bwa_2.py
+Run 10x Basic -- step 2: Generate Barcoded Fastqs Files
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -48,6 +46,7 @@ optional arguments:
                         Output file prefix
   --out_dir OUT_DIR, -o_dir OUT_DIR
                         Directory to store outputs
+
 ```
 
 ### Step 3: (Type "python BasicXX_step3.py -h" for help information)
