@@ -2,7 +2,7 @@
 
 
 ## Dependencies:
-BasicXX utilizes 
+
 
 ## Running The Code:
 ### Step 1: (Type "python BasicXX_step1.py -h" for help information)
