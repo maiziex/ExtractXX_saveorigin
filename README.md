@@ -5,7 +5,7 @@ Alternatively, for big raw fastqs files, it can also use <a href="https://github
 BasicXX_One utilizes <a href="https://www.python.org/downloads/">Python3</a>, <a href="http://bio-bwa.sourceforge.net/">BWA (Align Fastqs Files)</a>, <a href="http://samtools.sourceforge.net/">SAMtools</a>, and <a href="http://broadinstitute.github.io/picard/">Picard (Remove PCR duplicates)</a>. To be able to execute the above programs by typing their name on the command line, the program executables must be in one of the directories listed in the PATH environment variable.
 
 ## Running The Code:
-### (Type "python BasicXX_One.py -h" for help information)
+
 ```
 python BasicXX_One.py -i ../S_24385_Lysis_2_USPD16081850_H3332CCXY_L1 -o Lysis_24385_L1 --out_dir ../ -r refdata-GRCh38-2.1.0/fasta/genome.fa --h5_dir ../qual_20/ -b barcode4M.fa
 ```
