@@ -2,7 +2,7 @@
 Alternatively, for big raw fastqs files, it can also use <a href="https://github.com/maiziex/BasicXX">BasicXX</a> by five steps.
 
 ## Dependencies:
-BasicXX_One utilizes <a href="https://www.python.org/downloads/">Python3</a>, <a href="http://bio-bwa.sourceforge.net/">BWA (Align Fastqs Files)</a>, <a href="http://samtools.sourceforge.net/">SAMtools</a>. To be able to execute the above programs by typing their name on the command line, the program executables must be in one of the directories listed in the PATH environment variable.
+BasicXX_One utilizes <a href="https://www.python.org/downloads/">Python3</a>, <a href="http://bio-bwa.sourceforge.net/">BWA</a>, <a href="http://samtools.sourceforge.net/">SAMtools</a>. To be able to execute the above programs by typing their name on the command line, the program executables must be in one of the directories listed in the PATH environment variable.
 
 ## Running The Code:
 
