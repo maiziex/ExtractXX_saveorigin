@@ -87,9 +87,10 @@ def Extract_qname(h5_file, sam_file, output_file,qname_pickle,used_Cr):
                         for one_qname in choose_qname_list:
                             fw.writelines(one_qname + "\t" + barcode +  "\n")
                     count_mole += 1
-
-    read_qname_barcode_dict(output_file,qname_pickle)
+ 
     fw.close()
+    read_qname_barcode_dict(output_file,qname_pickle)
+   
         
         
 if __name__ == "__main__":
