@@ -7,31 +7,34 @@ BasicXX_One utilizes <a href="https://www.python.org/downloads/">Python3</a>, <a
 ## Running The Code:
 
 ```
-python BasicXX_One.py -i ../S_24385_Lysis_2_USPD16081850_H3332CCXY_L1 -o Lysis_24385_L1 --out_dir ../ -r refdata-GRCh38-2.1.0/fasta/genome.fa --h5_dir ../qual_20/ -b barcode4M.fa
+python ExtractXX_step1.py -i ../../S_24385_L1_barcoded_sorted_rmdup_bybarcode.bam -f1 ../../S_24385_L1.RA.fastq -f2 ../../S_24385_L1.I1.fastq -b /scratch/users/xzhou15/SimProj_10X/RealData/Scripts/barcode4M.fa --out_dir ../../extract_10x/ --h5_dir ../../qual_20/ --Cr 0.2 --flag all 
 ```
 ```
-usage: BasicXX_One.py [-h] [--input_file_prefix INPUT_FILE_PREFIX]
-                      [--output_file_prefix OUTPUT_FILE_PREFIX]
-                      [--out_dir OUT_DIR] [--reference REFERENCE]
-                      [--h5_dir H5_DIR]
-                      [--barcode_whitelist BARCODE_WHITELIST]
+usage: ExtractXX_step1.py [-h] [--input_file INPUT_FILE] [--out_dir OUT_DIR]
+                          [--h5_dir H5_DIR]
+                          [--barcode_whitelist BARCODE_WHITELIST] [--Cr CR]
+                          [--fastq_RA FASTQ_RA] [--fastq_I1 FASTQ_I1]
+                          [--flag FLAG]
 
-Run 10x Basic
+Run 10x Extract -- step1
 
 optional arguments:
   -h, --help            show this help message and exit
-  --input_file_prefix INPUT_FILE_PREFIX, -i INPUT_FILE_PREFIX
-                        Input file prefix
-  --output_file_prefix OUTPUT_FILE_PREFIX, -o OUTPUT_FILE_PREFIX
-                        Output file prefix
+  --input_file INPUT_FILE, -i INPUT_FILE
+                        input bam file
   --out_dir OUT_DIR, -o_dir OUT_DIR
                         Directory to store outputs
-  --reference REFERENCE, -r REFERENCE
-                        Referece fasta files
-  --h5_dir H5_DIR, -h5 H5_DIR
-                        Directory to store h5 related files
+  --h5_dir H5_DIR, -h5_dir H5_DIR
+                        Directory for storing h5 files of molecules
   --barcode_whitelist BARCODE_WHITELIST, -b BARCODE_WHITELIST
                         Barcode white list
+  --Cr CR, -c CR        Read coverage per molecule
+  --fastq_RA FASTQ_RA, -f1 FASTQ_RA
+                        origin fastq reads file
+  --fastq_I1 FASTQ_I1, -f2 FASTQ_I1
+                        origin fastq index file
+  --flag FLAG, -flag FLAG
+                        all or subset
 
 ```
 
