@@ -1,0 +1,37 @@
+++ input_file=../../S_24385_L1_barcoded_sorted_rmdup_bybarcode.bam
+++ out_dir=../../extract_10x/
+++ barcode_whitelist=/scratch/users/xzhou15/SimProj_10X/RealData/Scripts/barcode4M.fa
+++ h5_dir=../../qual_20/
+++ Cr=0.2
+++ raw_fastq_RA=../../S_24385_L1.RA.fastq
+++ raw_fastq_I1=../../S_24385_L1.I1.fastq
+++ flag=all
+++ used_flag=all
+++ for i in '{21..22}'
+++ echo 21
+++ chr_num=chr21
+++ cp run_step1.sbatch run_step1_21.sbatch
+++ echo samtools view ../../S_24385_L1_barcoded_sorted_rmdup_bybarcode.bam chr21 '>' ../../extract_10x/chr21_rmdup.sam
+++ echo awk '-F'\''\t'\''' ''\''{print $1}'\''' ../../extract_10x/chr21_rmdup.sam '|sort|uniq -d|grep -F -f -' ../../extract_10x/chr21_rmdup.sam '>' ../../extract_10x/chr21_rmdup_paired.sam
+++ echo python create_barcode_fastq_for_sam.py ../../extract_10x/chr21_rmdup_paired.sam ../../extract_10x/chr21_rmdup_paired_barcode.fastq
+++ echo bwa mem -t 32 -k 5 -T 1 /scratch/users/xzhou15/SimProj_10X/RealData/Scripts/barcode4M.fa -p ../../extract_10x/chr21_rmdup_paired_barcode.fastq '>' ../../extract_10x/chr21_rmdup_paired_barcode.sam
+++ echo python write_sam_by_barcodematch_dict_and_correctbarcode.py /scratch/users/xzhou15/SimProj_10X/RealData/Scripts/barcode4M.fa ../../extract_10x/chr21_rmdup_paired_barcode.sam ../../extract_10x/chr21_rmdup_paired.sam ../../extract_10x/chr21_rmdup_paired_correctbarcode.sam
+++ '[' all = all ']'
+++ echo python Extract_final_qname_byall.py ../../qual_20/chr21_cb.h5 ../../extract_10x/chr21_rmdup_paired_correctbarcode.sam ../../extract_10x/chr21_final_qname.txt ../../extract_10x/chr21_qname_barcode_dict.p 0.2
+++ echo python Extract_final_fastq_reads_RA.py ../../extract_10x/chr21_qname_barcode_dict.p ../../S_24385_L1.RA.fastq ../../extract_10x/chr21_RA.fastq
+++ echo python Extract_final_fastq_reads_I1.py ../../extract_10x/chr21_qname_barcode_dict.p ../../S_24385_L1.I1.fastq ../../extract_10x/chr21_I1.fastq
+++ sbatch run_step1_21.sbatch
+++ for i in '{21..22}'
+++ echo 22
+++ chr_num=chr22
+++ cp run_step1.sbatch run_step1_22.sbatch
+++ echo samtools view ../../S_24385_L1_barcoded_sorted_rmdup_bybarcode.bam chr22 '>' ../../extract_10x/chr22_rmdup.sam
+++ echo awk '-F'\''\t'\''' ''\''{print $1}'\''' ../../extract_10x/chr22_rmdup.sam '|sort|uniq -d|grep -F -f -' ../../extract_10x/chr22_rmdup.sam '>' ../../extract_10x/chr22_rmdup_paired.sam
+++ echo python create_barcode_fastq_for_sam.py ../../extract_10x/chr22_rmdup_paired.sam ../../extract_10x/chr22_rmdup_paired_barcode.fastq
+++ echo bwa mem -t 32 -k 5 -T 1 /scratch/users/xzhou15/SimProj_10X/RealData/Scripts/barcode4M.fa -p ../../extract_10x/chr22_rmdup_paired_barcode.fastq '>' ../../extract_10x/chr22_rmdup_paired_barcode.sam
+++ echo python write_sam_by_barcodematch_dict_and_correctbarcode.py /scratch/users/xzhou15/SimProj_10X/RealData/Scripts/barcode4M.fa ../../extract_10x/chr22_rmdup_paired_barcode.sam ../../extract_10x/chr22_rmdup_paired.sam ../../extract_10x/chr22_rmdup_paired_correctbarcode.sam
+++ '[' all = all ']'
+++ echo python Extract_final_qname_byall.py ../../qual_20/chr22_cb.h5 ../../extract_10x/chr22_rmdup_paired_correctbarcode.sam ../../extract_10x/chr22_final_qname.txt ../../extract_10x/chr22_qname_barcode_dict.p 0.2
+++ echo python Extract_final_fastq_reads_RA.py ../../extract_10x/chr22_qname_barcode_dict.p ../../S_24385_L1.RA.fastq ../../extract_10x/chr22_RA.fastq
+++ echo python Extract_final_fastq_reads_I1.py ../../extract_10x/chr22_qname_barcode_dict.p ../../S_24385_L1.I1.fastq ../../extract_10x/chr22_I1.fastq
+++ sbatch run_step1_22.sbatch
