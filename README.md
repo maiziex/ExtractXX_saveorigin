@@ -5,6 +5,7 @@ Alternatively, for big raw fastqs files, it can also use <a href="https://github
 ExtractXX utilizes <a href="https://www.python.org/downloads/">Python3</a>, <a href="http://bio-bwa.sourceforge.net/">BWA</a>, <a href="http://samtools.sourceforge.net/">SAMtools</a>. To be able to execute the above programs by typing their name on the command line, the program executables must be in one of the directories listed in the PATH environment variable.
 
 ## Running The Code:
+### Step1:
 
 ```
 python ExtractXX_step1.py -i ../../S_24385_L1_barcoded_sorted_rmdup_bybarcode.bam -f1 ../../S_24385_L1.RA.fastq -f2 ../../S_24385_L1.I1.fastq -b /scratch/users/xzhou15/SimProj_10X/RealData/Scripts/barcode4M.fa --out_dir ../../extract_10x/ --h5_dir ../../qual_20/ --Cr 0.2 --flag all 
@@ -37,4 +38,5 @@ optional arguments:
                         all or subset
 
 ```
+### Step2:
 
