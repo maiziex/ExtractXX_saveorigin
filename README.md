@@ -1,4 +1,4 @@
-# BasicXX_One
+# ExtractXX
 Alternatively, for big raw fastqs files, it can also use <a href="https://github.com/maiziex/BasicXX">BasicXX</a> by five steps.
 
 ## Dependencies:
