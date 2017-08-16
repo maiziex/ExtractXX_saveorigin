@@ -82,5 +82,5 @@ if __name__ == "__main__":
     chr_sam_file = sys.argv[2]
     qname_file = sys.argv[3]
     qname_pickle = sys.argv[4]
-    used_Cr = sys.argv[5]
+    used_Cr = float(sys.argv[5])
     Extract_qname(chr_h5,chr_sam_file,qname_file,qname_pickle,used_Cr)
