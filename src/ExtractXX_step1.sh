@@ -9,7 +9,7 @@ raw_fastq_I1=$7
 flag="all"
 used_flag=$8
 
-for i in {21..22} ;
+for i in {1..22} X;
 do
     echo $i
     chr_num=chr$i
